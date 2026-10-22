@@ -1,0 +1,8 @@
+# 文獻 PDF 不上傳（總計約 2GB，超出 GitHub 容量建議）
+*.pdf
+*.PDF
+# macOS / Office 暫存檔
+._*
+.DS_Store
+~$*
+__pycache__/
