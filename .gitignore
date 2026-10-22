@@ -1,4 +1,9 @@
-# 文獻 PDF 不上傳（總計約 2GB，超出 GitHub 容量建議）
+# 只同步 Plan_fen/，同層其他資料夾與檔案一律排除
+/*
+!/.gitignore
+!/Plan_fen/
+
+# 文獻 PDF 不上傳
 *.pdf
 *.PDF
 # macOS / Office 暫存檔
