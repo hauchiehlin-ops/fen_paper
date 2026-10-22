@@ -1,11 +1,8 @@
-# 只同步 Plan_fen/，同層其他資料夾與檔案一律排除
+# 只同步 Plan_fen/（含各主題資料夾的 PDF），同層其他資料夾與檔案一律排除
 /*
 !/.gitignore
 !/Plan_fen/
 
-# 文獻 PDF 不上傳
-*.pdf
-*.PDF
 # macOS / Office 暫存檔
 ._*
 .DS_Store
