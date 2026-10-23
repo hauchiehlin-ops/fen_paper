@@ -83,9 +83,10 @@ if plan:
             table(rows(new + old))]
     if pre: body += [para(f'另有 {len(pre)} 篇已存放於主題資料夾，但目前為預印本，需換成期刊正式版：'), table(rows(pre, '（目前為 SSRN 預印本，請下載期刊版）'))]
     W[:] = [450, 6300, 2600, 4450]
-    body += [para(f'二、系統性文獻回顧：保留候選、尚未下載（{len(keep)} 篇）', 26, True),
-             para(f'以下文獻與主題相關，計畫書未引用，建議下載以供正式回顧時全文篩選。另有 {len(got)} 篇保留候選已下載並歸檔（見第四節）。'),
-             table2([[str(i + 1), c['ref'], c['why'], c['url']] for i, c in enumerate(keep)], ['#', '文獻', '保留理由', '連結']),
+    body += ([para(f'二、系統性文獻回顧：保留候選、尚未下載（{len(keep)} 篇）', 26, True),
+             para(f'以下文獻與主題相關，計畫書未引用，建議下載以供正式回顧時全文篩選。另有 {len(got)} 篇保留候選已下載並完成全文篩選（見第四節）。'),
+             table2([[str(i + 1), c['ref'], c['why'], c['url']] for i, c in enumerate(keep)], ['#', '文獻', '保留理由', '連結'])] if keep else
+             [para('二、系統性文獻回顧：保留候選（0 篇尚未下載）', 26, True), para(f'保留候選 {len(got)} 篇均已下載並完成全文篩選，結果見第四節。')]) + [
              para(f'三、系統性文獻回顧：排除紀錄（網路檢索 {len(drop)} 篇、主題資料夾 {len(P.FOLDER_EXCLUDED)} 篇）', 26, True)]
     W[:] = [450, 8600, 4750]
     def table3(rows, hdr=['#', '文獻', '排除理由']):
@@ -99,9 +100,10 @@ if plan:
             x.append('</w:tr>')
         x.append('</w:tbl>'); return ''.join(x) + para('', 10, after=0)
     W[:] = [450, 9600, 3750]
-    gotsec = [para(f'四、系統性文獻回顧：保留候選、已下載並歸檔（{len(got)} 篇）', 26, True),
-              para('以下文獻已由 External References 更名並歸檔，書目資料依 PDF 更新；尚待全文篩選，篩選後決定是否納入計畫書。'),
-              table3([[str(i + 1), c['ref'], where(c)] for i, c in enumerate(got)], ['#', '文獻', '所在資料夾'])]
+    ok = sum(c['status'] == '納入' for c in got)
+    gotsec = [para(f'四、系統性文獻回顧：保留候選之全文篩選結果（{len(got)} 篇；納入 {ok}、排除 {len(got) - ok}）', 26, True),
+              para('以下文獻已由 External References 更名並歸檔，書目資料依 PDF 更新。納入者已列入計畫書參考文獻與缺口矩陣；排除者亦列於第三節。'),
+              table3([[str(i + 1), c['ref'], c['status'] + '｜' + where(c)] for i, c in enumerate(got)], ['#', '文獻', '篩選結果｜所在資料夾'])]
     W[:] = [450, 8600, 4750]
     body += [table3([[str(i + 1), c['ref'], c['why']] for i, c in enumerate(drop)] +
                     [[str(len(drop) + i + 1), t + '（主題資料夾）', w] for i, (t, w) in enumerate(P.FOLDER_EXCLUDED)])] + gotsec
