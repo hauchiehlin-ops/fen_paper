@@ -29,10 +29,11 @@ python3 _tools/plan_generator/dl.py _tools/plan_generator/used_refs.json Plan_fe
 ## plan-2（於 paper/ 資料夾執行）
 
 ```
-python3 _tools/plan_generator/build.py Plan_fen Plan_fen/plan-2 plan-2 - plan2
-python3 _tools/plan_generator/dl.py _tools/plan_generator/used_refs_plan2.json Plan_fen/plan-2/plan-2_待下載文獻清單.docx plan-2_兩年期研究計畫書.docx plan2
+python3 _tools/plan_generator/build.py Plan_fen Plan_fen/plan-2 MMDD-HHMM - plan2
+python3 _tools/plan_generator/dl.py _tools/plan_generator/used_refs_plan2.json Plan_fen/plan-2/MMDD-HHMM_待下載文獻清單.docx MMDD-HHMM_兩年期研究計畫書.docx plan2
 ```
 
+- plan-2 的三個檔案使用同一個時間戳記（產出時的月日-時分），更新時先刪除舊檔。
 - `build.py` 第 5 個參數為計畫代號，`-` 表示輸出目錄與超連結基準目錄相同；省略代號即產出 plan-1。
 - `refs_plan2.py` 中 `chk` 欄位標示未能於線上核實的書目項目，待下載清單會註明「待核對」。
-- 文獻數量：`python3 _tools/plan_generator/counts.py Plan_fen Plan_fen/MMDD-HHMM_各主題資料夾文獻數量.docx <比較基準 git 版本> "plan-1:Plan_fen/plan-1/plan-1_兩年期研究計畫書.docx" "plan-2:Plan_fen/plan-2/plan-2_兩年期研究計畫書.docx"`
+- 文獻數量：`python3 _tools/plan_generator/counts.py Plan_fen Plan_fen/MMDD-HHMM_各主題資料夾文獻數量.docx <比較基準 git 版本> "plan-1:Plan_fen/plan-1/plan-1_兩年期研究計畫書.docx" "plan-2:Plan_fen/plan-2/MMDD-HHMM_兩年期研究計畫書.docx"`
