@@ -11,6 +11,7 @@
 | `lib.py` | 引用自動加超連結、DOCX／HTML 寫出、參考文獻格式。 |
 | `build.py` | 產出計畫書 .docx 與 .html。 |
 | `dl.py` | 產出待下載文獻清單 .docx。 |
+| `counts.py` | 產出各主題資料夾文獻數量 .docx（各計畫書引用數、預印本、與 git 基準版本的增刪明細）。 |
 | `content_plan2.py`、`figures_plan2.py`、`refs_plan2.py` | plan-2（AI 虛擬主播與真人主播）的內文、圖 1–5 與新增文獻；`refs_plan2.py` 另含系統性文獻回顧的保留候選與排除紀錄。 |
 
 ## 使用方式（於 paper/ 資料夾執行）
@@ -34,3 +35,4 @@ python3 _tools/plan_generator/dl.py _tools/plan_generator/used_refs_plan2.json P
 
 - `build.py` 第 5 個參數為計畫代號，`-` 表示輸出目錄與超連結基準目錄相同；省略代號即產出 plan-1。
 - `refs_plan2.py` 中 `chk` 欄位標示未能於線上核實的書目項目，待下載清單會註明「待核對」。
+- 文獻數量：`python3 _tools/plan_generator/counts.py Plan_fen Plan_fen/MMDD-HHMM_各主題資料夾文獻數量.docx <比較基準 git 版本> "plan-1:Plan_fen/plan-1/plan-1_兩年期研究計畫書.docx" "plan-2:Plan_fen/plan-2/plan-2_兩年期研究計畫書.docx"`
