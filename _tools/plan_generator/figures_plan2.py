@@ -14,13 +14,13 @@ def fig_slr():
     f.box(76, 84, 186, 46, '題名與摘要篩選後\n與主題相關：n = 21', fill='FFFFFF', size=8.5, bold1=True)
     f.box(282, 84, 194, 46, '期刊等級與書目核對\n（A 級 FT50；B 級 SSCI、IF > 2）', fill='FFFFFF', size=8.5, bold1=True)
     f.box(76, 140, 186, 40, '排除 n = 10（分析式模型、\n非銷售情境、勘誤、期刊等級）', fill='F2F2F2', size=8, lc='7F7F7F')
-    f.box(282, 140, 194, 40, '排除 n = 9；保留候選待全文篩選\nn = 16（列於待下載清單）', fill='F2F2F2', size=8, lc='7F7F7F')
+    f.box(282, 140, 194, 40, '排除 n = 9；保留 16 篇下載全文篩選，\n再排除 n = 3（期刊等級、主題不符）', fill='F2F2F2', size=8, lc='7F7F7F')
     f.line(169, 130, 169, 140, arrow=False); f.line(379, 130, 379, 140, arrow=False)
     f.line(169, 180, 169, 200); f.line(379, 180, 379, 200)
     f.box(76, 200, 186, 34, '納入 n = 11', fill=C1, size=9, bold=True)
-    f.box(282, 200, 194, 34, '納入 n = 23', fill=C1, size=9, bold=True)
+    f.box(282, 200, 194, 34, '納入 n = 36（23＋13）', fill=C1, size=9, bold=True)
     f.line(169, 234, 230, 256); f.line(379, 234, 320, 256)
-    f.box(140, 256, 240, 40, '近五年核心文獻 n = 34（A 級 14 篇、B 級 20 篇）\n＋理論基礎文獻 n = 10（2021 年以前）', fill=CT, size=8.5, bold1=True, lc=BLUE, lw=1.3)
+    f.box(140, 256, 240, 40, '近五年核心文獻 n = 47（A 級 14 篇、B 級 33 篇）\n＋理論基礎文獻 n = 10（2021 年以前）', fill=CT, size=8.5, bold1=True, lc=BLUE, lw=1.3)
     f.text(76, 302, 400, 26, '正式回顧（計畫第 1 個月）：依表 3 之檢索式於 Web of Science 與 Scopus 重新執行，\n本圖數字屬計畫書撰寫階段之初步回顧。', size=8, color='7F7F7F', align='left')
     return f
 
