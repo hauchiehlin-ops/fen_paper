@@ -14,6 +14,7 @@
       │    ├─ 月日-時分_兩年期研究計畫書.html
       │    ├─ 月日-時分_兩年期研究計畫書.docx
       │    ├─ _計畫書文獻連結使用說明.txt（本檔）
+      │    ├─ plan-1/   ← 封存的原計畫（原 1022-1610 版；連結以 ../ 指回主題資料夾）
       │    ├─ 1. 主題一 創新發展 (Innovative Development)/
       │    ├─ 2. 主題二 消費者心理行為 (Consumer Psychological Behavior)/
       │    ├─ 3. 主題三 電子商務模式 (E-commerce Models)/
