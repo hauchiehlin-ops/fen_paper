@@ -67,31 +67,44 @@ if plan:
                 x.append(f'<w:tc><w:tcPr><w:tcW w:w="{w}" w:type="dxa"/>{sh}</w:tcPr><w:p><w:pPr><w:spacing w:after="0"/></w:pPr>{bd}</w:p></w:tc>')
             x.append('</w:tr>')
         x.append('</w:tbl>'); return ''.join(x) + para('', 10, after=0)
-    keep = [c for c in P.CANDIDATES if c['status'] == '保留']; drop = [c for c in P.CANDIDATES if c['status'] == '排除']
+    keep = [c for c in P.CANDIDATES if c['status'] == '保留' and not c.get('got')]; drop = [c for c in P.CANDIDATES if c['status'] == '排除']
+    got = [c for c in P.CANDIDATES if c.get('got')]
+    import glob
+    def where(c):
+        t = re.sub(r'[^a-z0-9]', '', re.sub(r'（.*$', '', c['ref'].split(' — ')[-1]).lower())[:40]
+        for f in glob.glob(os.path.join(os.path.dirname(os.path.abspath(dst)), '..', '[1-5]. *', '*.pdf')):
+            if re.sub(r'[^a-z0-9]', '', os.path.basename(f)[7:].lower()).startswith(t): return os.path.basename(os.path.dirname(f)).split(' (')[0]
+        return '（未找到檔案）'
     body = [para(f'plan-2 待下載文獻清單與系統性文獻回顧篩選紀錄', 32, True, 200),
             para(f'計畫書「{planfile}」參考文獻共 {len(refs)} 篇，其中 {sum(1 for r in refs if r["path"])} 篇已存放於主題資料夾，{len(new) + len(old)} 篇尚未取得。'
                  '書目資料已以網路檢索比對出版社頁面、RePEc／大學典藏或期刊新聞稿（本工作環境無法連線 Crossref 與 doi.org）；標示「待核對」者，請於下載時以出版社頁面確認後告知，以便更新計畫書。'
                  '下載後放進 External References 資料夾即可，之後重新產出計畫書時，引用超連結會改連到本地 PDF。'),
             para(f'一、plan-2 引用、尚未取得的文獻（{len(new) + len(old)} 篇）', 26, True), para('期刊欄標示 A 級（FT50）、B 級（SSCI、影響係數 > 2）或理論基礎（2021 年以前）。在校園網路或學校 VPN 下開啟 DOI 連結，通常可以直接下載。'),
             table(rows(new + old))]
+    if pre: body += [para(f'另有 {len(pre)} 篇已存放於主題資料夾，但目前為預印本，需換成期刊正式版：'), table(rows(pre, '（目前為 SSRN 預印本，請下載期刊版）'))]
     W[:] = [450, 6300, 2600, 4450]
-    body += [para(f'二、系統性文獻回顧：保留候選、待全文篩選（{len(keep)} 篇）', 26, True),
-             para('以下文獻與主題相關，但書目或期刊等級尚未完成核對，計畫書未引用。建議一併下載，供正式回顧時全文篩選。'),
+    body += [para(f'二、系統性文獻回顧：保留候選、尚未下載（{len(keep)} 篇）', 26, True),
+             para(f'以下文獻與主題相關，計畫書未引用，建議下載以供正式回顧時全文篩選。另有 {len(got)} 篇保留候選已下載並歸檔（見第四節）。'),
              table2([[str(i + 1), c['ref'], c['why'], c['url']] for i, c in enumerate(keep)], ['#', '文獻', '保留理由', '連結']),
              para(f'三、系統性文獻回顧：排除紀錄（網路檢索 {len(drop)} 篇、主題資料夾 {len(P.FOLDER_EXCLUDED)} 篇）', 26, True)]
     W[:] = [450, 8600, 4750]
-    def table3(rows):
+    def table3(rows, hdr=['#', '文獻', '排除理由']):
         x = ['<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/><w:tblBorders>' + ''.join(f'<w:{s} w:val="single" w:sz="4" w:space="0" w:color="999999"/>' for s in ['top', 'left', 'bottom', 'right', 'insideH', 'insideV']) +
              '</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>' + ''.join(f'<w:gridCol w:w="{w}"/>' for w in W) + '</w:tblGrid>']
-        for k, r in enumerate([['#', '文獻', '排除理由']] + rows):
+        for k, r in enumerate([hdr] + rows):
             x.append('<w:tr>')
             for c, w in zip(r, W):
                 sh = '<w:shd w:val="clear" w:color="auto" w:fill="E7E6E6"/>' if k == 0 else ''
                 x.append(f'<w:tc><w:tcPr><w:tcW w:w="{w}" w:type="dxa"/>{sh}</w:tcPr><w:p><w:pPr><w:spacing w:after="0"/></w:pPr>{run(c, 17, k == 0)}</w:p></w:tc>')
             x.append('</w:tr>')
         x.append('</w:tbl>'); return ''.join(x) + para('', 10, after=0)
+    W[:] = [450, 9600, 3750]
+    gotsec = [para(f'四、系統性文獻回顧：保留候選、已下載並歸檔（{len(got)} 篇）', 26, True),
+              para('以下文獻已由 External References 更名並歸檔，書目資料依 PDF 更新；尚待全文篩選，篩選後決定是否納入計畫書。'),
+              table3([[str(i + 1), c['ref'], where(c)] for i, c in enumerate(got)], ['#', '文獻', '所在資料夾'])]
+    W[:] = [450, 8600, 4750]
     body += [table3([[str(i + 1), c['ref'], c['why']] for i, c in enumerate(drop)] +
-                    [[str(len(drop) + i + 1), t + '（主題資料夾）', w] for i, (t, w) in enumerate(P.FOLDER_EXCLUDED)])]
+                    [[str(len(drop) + i + 1), t + '（主題資料夾）', w] for i, (t, w) in enumerate(P.FOLDER_EXCLUDED)])] + gotsec
     n = len(new) + len(old)
 sect = '<w:sectPr><w:pgSz w:w="16838" w:h="11906" w:orient="landscape"/><w:pgMar w:top="1000" w:right="1000" w:bottom="1000" w:left="1000" w:header="500" w:footer="500" w:gutter="0"/></w:sectPr>'
 doc = f'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:body>{"".join(body)}{sect}</w:body></w:document>'
