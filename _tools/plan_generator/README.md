@@ -11,6 +11,7 @@
 | `lib.py` | 引用自動加超連結、DOCX／HTML 寫出、參考文獻格式。 |
 | `build.py` | 產出計畫書 .docx 與 .html。 |
 | `dl.py` | 產出待下載文獻清單 .docx。 |
+| `content_plan2.py`、`figures_plan2.py`、`refs_plan2.py` | plan-2（AI 虛擬主播與真人主播）的內文、圖 1–5 與新增文獻；`refs_plan2.py` 另含系統性文獻回顧的保留候選與排除紀錄。 |
 
 ## 使用方式（於 paper/ 資料夾執行）
 
@@ -23,3 +24,13 @@ python3 _tools/plan_generator/dl.py _tools/plan_generator/used_refs.json Plan_fe
 - 內文引用寫成 `(Gutman, 1982)`、`(Reynolds & Gutman, 1988)`、`(Ter Hofstede et al., 1998, 1999)` 或 `Gutman (1982)` 即會自動加上超連結；同年同姓者以 `Z. Li et al., 2025` 區分。
 - 有本地 PDF 的文獻連到主題資料夾（相對路徑），否則連到 DOI。PDF 放進主題資料夾後重新執行即會改連本地檔案。
 - 執行結果會列出「未被引用的文獻」與「無法對應的引用」，兩者都應為空。
+
+## plan-2（於 paper/ 資料夾執行）
+
+```
+python3 _tools/plan_generator/build.py Plan_fen Plan_fen/plan-2 plan-2 - plan2
+python3 _tools/plan_generator/dl.py _tools/plan_generator/used_refs_plan2.json Plan_fen/plan-2/plan-2_待下載文獻清單.docx plan-2_兩年期研究計畫書.docx plan2
+```
+
+- `build.py` 第 5 個參數為計畫代號，`-` 表示輸出目錄與超連結基準目錄相同；省略代號即產出 plan-1。
+- `refs_plan2.py` 中 `chk` 欄位標示未能於線上核實的書目項目，待下載清單會註明「待核對」。
