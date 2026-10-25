@@ -105,21 +105,41 @@ W_NS = ('xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" 
 EMU = 12700  # per point
 
 class Docx:
-    def __init__(self, lk, pat, outdir):
+    GITHUB_BLOB_BASE = 'https://github.com/hauchiehlin-ops/fen_paper/blob/main'
+
+    def __init__(self, lk, pat, outdir, link_mode='cloud'):
         self.lk, self.pat, self.outdir = lk, pat, outdir
+        self.link_mode = link_mode
         self.body = []; self.rels = []; self.stats = {}; self.shape_id = 100
         self.html = []
+
+    def cloud_url(self, path):
+        if not path:
+            return None
+        norm_p = path.replace('\\', '/')
+        if 'Plan_fen/' in norm_p:
+            rel = norm_p[norm_p.index('Plan_fen/'):]
+        else:
+            rel = norm_p
+        parts = rel.split('/')
+        encoded = '/'.join(urllib.parse.quote(p) for p in parts)
+        return f'{self.GITHUB_BLOB_BASE}/{encoded}'
 
     # links ---------------------------------------------------------
     def target(self, r):
         if r.path:
+            if self.link_mode == 'cloud':
+                return self.cloud_url(r.path)
             rel = os.path.relpath(r.path, self.outdir)
             # keep non-ASCII raw (Word for Mac does not decode %XX in Chinese folder names)
             return ''.join({'%': '%25', ' ': '%20', '#': '%23', '?': '%3F'}.get(c, c) for c in rel)
         return r.doi
 
     def html_target(self, r):
-        if r.path: return urllib.parse.quote(os.path.relpath(r.path, self.outdir))
+        if r.path:
+            if self.link_mode == 'cloud':
+                return self.cloud_url(r.path)
+            return urllib.parse.quote(os.path.relpath(r.path, self.outdir))
         return r.doi
 
     def rid(self, url):
@@ -363,8 +383,7 @@ figure{margin:1.5em 0} figure svg{width:100%;height:auto;background:#fff;border-
 .note{background:var(--note);border:1px solid var(--line);border-radius:8px;padding:12px 16px;font-size:.9em;text-indent:0;font-family:sans-serif}
 @media (prefers-color-scheme:dark){td[style]{color:#111}}
 '''
-        note = ('<div class="note">網頁版與同時間戳的 Word 版內容相同。點擊內文的文獻引用或參考文獻標題，會在新分頁開啟主題資料夾中的 PDF（虛線底線者尚無本地檔案，開啟 DOI 頁面）。'
-                '請將本檔與五個主題資料夾放在同一層；Windows、macOS、Linux 的主流瀏覽器皆可使用。Word 版的圖為可編輯的繪圖物件。</div>')
+        note = ('<div class="note">網頁版與同時間戳的 Word 版內容相同。點擊內文的文獻引用或參考文獻標題，會在新分頁線上開啟論文全文 PDF（未取得 PDF 的文獻則開啟官方 DOI 頁面），無需額外下載資料夾，任何裝置皆可直接點擊閱讀。Word 版的圖為可編輯的繪圖物件。</div>')
         page = (f'<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
                 f'<title>{html.escape(title)}</title><style>{css}</style></head><body>{note}{"".join(self.html)}</body></html>')
         open(path, 'w', encoding='utf-8').write(page)
